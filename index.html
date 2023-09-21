@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="styles.css">
 
-    <title>Página Web apropiada (STA 02)</title>
-</head>
-<body>
-    <header>
-        <h1>Bienvenido a Mi Página Web(STA04)</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Acerca de</a></li>
-                <li><a href="#">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="styles.css">
 
-    <main>
-        <h2>Contenido Principal</h2>
-        <p>¡Hola, mundo! Esta es una página web de ejemplo.</p>
-    </main>
+        <title> Página Web apropiada (STA 02)</title>
 
-    <footer>
-        <p>Derechos de autor &copy; 2023 Mi Página Web</p>
-    </footer>
-</body>
+    </head>
+
+    <body>
+        <header>
+            <h1>Bienvenido a Mi Página Web(STA04)</h1>
+        </header>
+
+        <main>
+            <h2> Buscador de películas </h2>
+            <p> Escribe el título de la película para saber su director</p>
+            <input type="text" id="tituloPelicula" placeholder="Escribe el titulo de la pelicula..."> 
+            <button onclick="obtenerDirector()"> Enviar </button>
+            
+            <script src="practica3_1.js"></script>
+        </main>
+
+        <footer>
+            <p> Derechos de autor &copy; 2023 Pablo_Natalia_Carmen </p>
+        </footer>
+    </body>
+
 </html>

@@ -1,12 +1,12 @@
-/* Estilos globales */
+/* Estilos generales para el cuerpo de la página */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
+    background-color: #f2f2f2;
 }
 
-/* Encabezado */
+/* Estilos para el encabezado */
 header {
     background-color: #333;
     color: #fff;
@@ -14,35 +14,57 @@ header {
     padding: 20px;
 }
 
+/* Estilos para el título en el encabezado */
 header h1 {
     margin: 0;
+    font-size: 24px;
 }
 
-nav ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-nav li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-}
-
-/* Contenido Principal */
+/* Estilos para el contenido principal */
 main {
-    margin: 20px;
+    max-width: 800px;
+    margin: 20px auto;
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Pie de Página */
+/* Estilos para el título del contenido principal */
+main h2 {
+    font-size: 20px;
+}
+
+/* Estilos para el párrafo del contenido principal */
+main p {
+    font-size: 16px;
+}
+
+/* Estilos para el campo de entrada y el botón */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+/* Estilos para el pie de página */
 footer {
     text-align: center;
     padding: 10px;
