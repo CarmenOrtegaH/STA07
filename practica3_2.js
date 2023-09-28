@@ -7,7 +7,7 @@ const port = 3000;
 app.use(express.json());
 
 // Ruta al archivo JSON que servirá como base de datos
-const databaseFile = 'database.json';
+const databaseFile = 'peliculas.json';
 
 // Función para cargar la base de datos desde el archivo JSON
 function loadDatabase() {
@@ -15,7 +15,7 @@ function loadDatabase() {
     const data = fs.readFileSync(databaseFile, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    return { actors: [], movies: [] };
+    return { actores: [], peliculas: [] };
   }
 }
 
@@ -26,7 +26,7 @@ function saveDatabase(database) {
 }
 
 // Endpoint para buscar una película por ID
-app.get('/movies/:id', (req, res) => {
+app.get('/peliculas/:id', (req, res) => {
   const id = req.params.id;
   const database = loadDatabase();
   const movie = database.movies.find((m) => m.id === id);
@@ -38,7 +38,7 @@ app.get('/movies/:id', (req, res) => {
 });
 
 // Endpoint para crear una película
-app.post('/movies', (req, res) => {
+app.post('/peliculas', (req, res) => {
   const { id, nombre, anoPublicacion, actores } = req.body;
   const database = loadDatabase();
   const newMovie = { id, nombre, anoPublicacion, actores };
@@ -48,7 +48,7 @@ app.post('/movies', (req, res) => {
 });
 
 // Endpoint para borrar una película por ID
-app.delete('/movies/:id', (req, res) => {
+app.delete('/peliculas/:id', (req, res) => {
   const id = req.params.id;
   const database = loadDatabase();
   const index = database.movies.findIndex((m) => m.id === id);
@@ -62,7 +62,7 @@ app.delete('/movies/:id', (req, res) => {
 });
 
 // Endpoint para modificar una película por ID
-app.put('/movies/:id', (req, res) => {
+app.put('/peliculas/:id', (req, res) => {
   const id = req.params.id;
   const { nombre, anoPublicacion, actores } = req.body;
   const database = loadDatabase();
