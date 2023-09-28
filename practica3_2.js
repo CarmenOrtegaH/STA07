@@ -31,6 +31,10 @@ app.get('/peliculas/:id', (req, res) => {
   const database = loadDatabase();
   const movie = database.peliculas.find((m) => m.id === id);
   if (movie) {
+    movie.actores = movie.actores.map((actorId) => {
+      const actor = database.actores.find((a) => a.idA === actorId);
+      return actor ? actor.nombreCompleto : actorId;
+    });
     res.json(movie);
   } else {
     res.status(404).json({ error: 'Película no encontrada' });
@@ -39,9 +43,9 @@ app.get('/peliculas/:id', (req, res) => {
 
 // Endpoint para crear una película
 app.post('/peliculas', (req, res) => {
-  const { id, nombre, anoPublicacion, actores } = req.body;
+  const { id, nombre, ano, actores } = req.body;
   const database = loadDatabase();
-  const newMovie = { id, nombre, anoPublicacion, actores };
+  const newMovie = { id, nombre, ano, actores };
   database.peliculas.push(newMovie);
   saveDatabase(database);
   res.json(newMovie);
@@ -64,12 +68,12 @@ app.delete('/peliculas/:id', (req, res) => {
 // Endpoint para modificar una película por ID
 app.put('/peliculas/:id', (req, res) => {
   const id = req.params.id;
-  const { nombre, anoPublicacion, actores } = req.body;
+  const { nombre, ano, actores } = req.body;
   const database = loadDatabase();
   const movie = database.peliculas.find((m) => m.id === id);
   if (movie) {
     if (nombre) movie.nombre = nombre;
-    if (anoPublicacion) movie.anoPublicacion = anoPublicacion;
+    if (ano) movie.ano = ano;
     if (actores) movie.actores = actores;
     saveDatabase(database);
     res.json(movie);
@@ -85,7 +89,7 @@ app.post('/actores', (req, res) => {
   const newActor = { idA, nombreCompleto, anoNacimiento };
   database.actores.push(newActor);
   saveDatabase(database);
-  res.json(newMovie);
+  res.json(newActor);
 });
 
 // Endpoint para borrar un actor por ID
