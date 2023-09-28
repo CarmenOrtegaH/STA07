@@ -3,7 +3,7 @@ const fs = require('fs');
 const app = express();
 const port = 3000;
 
-// Middleware para parsear el cuerpo de las solicitudes en formato JSON
+// Middleware para procesar el 
 app.use(express.json());
 
 // Ruta al archivo JSON que servirá como base de datos
@@ -109,7 +109,7 @@ app.put('/actores/:id', (req, res) => {
   const database = loadDatabase();
   const actor = database.actores.find((m) => m.id === id);
   if (actor) {
-    if (nombre) actor.nombreCompleto = nombre;
+    if (nombre) actor.nombreCompleto = nombreCompleto;
     if (anoPublicacion) actor.anoNacimiento = anoNacimiento;
     saveDatabase(database);
     res.json(actor);

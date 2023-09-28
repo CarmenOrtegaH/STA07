@@ -1,53 +1,53 @@
 {
     "peliculas": [
-        {"id": 1,
+        {"id": "1",
         "nombre": "Shutter Island",
-        "año": 2010,
+        "año": "2010",
         "actores": ["11","12"] 
         },
-        {"id": 2,
+        {"id": "2",
         "nombre": "El Show de Truman",
-        "año": 1998,
+        "año": "1998",
         "actores": ["21","22"] 
         },
-        {"id": 3,
+        {"id": "3",
         "nombre": "Matilda",
-        "año": 1996,
+        "año": "1996",
         "actores": ["31","32"] 
         },
-        {"id": 4,
+        {"id": "4",
         "nombre": "Titanic",
-        "año": 1997,
+        "año": "1997",
         "actores": ["11","42"] 
         },
-        {"id": 5,
+        {"id": "5",
         "nombre": "Forrest Gump",
-        "año": 1994,
+        "año": "1994",
         "actores": ["51","52"] 
         },
-        {"id": 6,
+        {"id": "6",
         "nombre": "Pulp Fiction",
-        "año": 1994,
+        "año": "1994",
         "actores": ["61","62"] 
         },
-        {"id": 7,
+        {"id": "7",
         "nombre": "El Padrino",
-        "año": 1972,
+        "año": "1972",
         "actores": ["71","72"] 
         },
-        {"id": 8,
+        {"id": "8",
         "nombre": "Matrix",
-        "año": 1999,
+        "año": "1999",
         "actores": ["81","82"] 
         },
-        {"id": 9,
+        {"id": "9",
         "nombre": "Jurassic Park",
-        "año": 1993,
+        "año": "1993",
         "actores": ["91","92"] 
         },    
-        {"id": 10,
+        {"id": "10",
         "nombre": "Gladiador",
-        "año": 2000,
+        "año": "2000",
         "actores": ["101","102"] 
         }
     ],
