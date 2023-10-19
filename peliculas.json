@@ -95,7 +95,7 @@
       "nombre": "El gato con botas",
       "ano": "2023",
       "actores": [
-        "121",
+        "12",
         "122"
       ]
     }
@@ -200,6 +200,11 @@
       "idA": "111",
       "nombreCompleto": "Antonio Banderas",
       "anoNacimiento": "1960"
+    },
+    {
+      "idA": "122",
+      "nombreCompleto": "Jamie Lee Curtis",
+      "anoNacimiento": "1952"
     }
   ]
 }

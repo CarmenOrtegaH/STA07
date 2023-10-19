@@ -1,0 +1,23 @@
+.category {
+    border: 1px solid #ddd;
+    margin: 10px;
+    padding: 10px;
+    width: 200%;
+    background-color: #9ed3ff6d;
+    border-radius: 1px;
+    box-shadow: 0 0 3px #333;
+    overflow-x: auto;
+  }
+  
+  .movie-list {
+    display: flex;
+    gap: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin: 0;
+    color: #333;
+  }
+  
+  
