@@ -1,5 +1,5 @@
 import React from 'react';
-import './categoria.css'
+import './categoria.css';
 import Movie from './pelicula.jsx';
 
 function Category(props) {
@@ -10,9 +10,9 @@ function Category(props) {
         {props.movies.map((movie) => (
           <Movie
             key={movie.id}
-            title={movie.title}
-            director={movie.director}
-            year={movie.year}
+            nombre={movie.nombre}
+            ano={movie.ano}
+            actores={movie.actores}
           />
         ))}
       </div>
@@ -21,3 +21,5 @@ function Category(props) {
 }
 
 export default Category;
+
+

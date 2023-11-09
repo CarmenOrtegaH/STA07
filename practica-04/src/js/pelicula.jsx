@@ -10,11 +10,11 @@ function Movie(props) {
 
   return (
     <div className="movie-card">
-      <h2>{props.title}</h2>
+      <h2>{props.nombre}</h2>
       {showDetails ? (
         <div>
-          <p>Director: {props.director}</p>
-          <p>Año de lanzamiento: {props.year}</p>
+          <p>Actores: {props.actores}</p>
+          <p>Año de lanzamiento: {props.ano}</p>
         </div>
       ) : null}
       <button onClick={toggleDetails}>

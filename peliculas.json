@@ -1,105 +1,73 @@
 {
   "peliculas": [
     {
-      "id": "1",
-      "nombre": "Shutter Island",
-      "ano": "2010",
-      "actores": [
-        "11",
-        "12"
-      ]
+        "id": "1",
+        "nombre": "Shutter Island",
+        "ano": "2010",
+        "actores": ["11", "12"]
     },
     {
-      "id": "2",
-      "nombre": "El Show de Truman",
-      "ano": "1998",
-      "actores": [
-        "21",
-        "22"
-      ]
+        "id": "2",
+        "nombre": "El Show de Truman",
+        "ano": "1998",
+        "actores": ["21", "22"]
     },
     {
-      "id": "3",
-      "nombre": "Matilda",
-      "ano": "1996",
-      "actores": [
-        "31",
-        "32"
-      ]
+        "id": "3",
+        "nombre": "Matilda",
+        "ano": "1996",
+        "actores": ["31", "32"]
     },
     {
-      "id": "4",
-      "nombre": "Titanic",
-      "ano": "1997",
-      "actores": [
-        "11",
-        "42"
-      ]
+        "id": "4",
+        "nombre": "Titanic",
+        "ano": "1997",
+        "actores": ["11", "42"]
     },
     {
-      "id": "5",
-      "nombre": "Forrest Gump",
-      "ano": "1994",
-      "actores": [
-        "51",
-        "52"
-      ]
+        "id": "5",
+        "nombre": "Forrest Gump",
+        "ano": "1994",
+        "actores": ["51", "52"]
     },
     {
-      "id": "6",
-      "nombre": "Pulp Fiction",
-      "ano": "1994",
-      "actores": [
-        "61",
-        "62"
-      ]
+        "id": "6",
+        "nombre": "Pulp Fiction",
+        "ano": "1994",
+        "actores": ["61", "62"]
     },
     {
-      "id": "7",
-      "nombre": "El Padrino",
-      "ano": "1972",
-      "actores": [
-        "71",
-        "72"
-      ]
+        "id": "7",
+        "nombre": "El Padrino",
+        "ano": "1972",
+        "actores": ["71", "72"]
     },
     {
-      "id": "8",
-      "nombre": "Matrix",
-      "ano": "1999",
-      "actores": [
-        "81",
-        "82"
-      ]
+        "id": "8",
+        "nombre": "Matrix",
+        "ano": "1999",
+        "actores": ["81", "82"]
     },
     {
-      "id": "9",
-      "nombre": "Jurassic Park",
-      "ano": "1993",
-      "actores": [
-        "91",
-        "92"
-      ]
+        "id": "9",
+        "nombre": "Jurassic Park",
+        "ano": "1993",
+        "actores": ["91", "92"]
     },
     {
-      "id": "10",
-      "nombre": "Gladiador",
-      "ano": "2000",
-      "actores": [
-        "101",
-        "102"
-      ]
+        "id": "10",
+        "nombre": "Gladiador",
+        "ano": "2000",
+        "actores": ["101", "102"]
     },
     {
-      "id": "11",
-      "nombre": "El gato con botas",
-      "ano": "2023",
-      "actores": [
-        "12",
-        "122"
-      ]
+        "id": "11",
+        "nombre": "El gato con botas",
+        "ano": "2023",
+        "actores": ["12", "122"]
     }
   ],
+
   "actores": [
     {
       "idA": "11",
@@ -206,5 +174,11 @@
       "nombreCompleto": "Jamie Lee Curtis",
       "anoNacimiento": "1952"
     }
+  ],
+
+  "categorias": [
+    { "id": "1", "name": "Drama", "moviesData": ["1", "2"]},
+    { "id": "2", "name": "Acción", "moviesData": ["3", "4", "5", "6", "7"]},
+    { "id": "3", "name": "Comedia", "moviesData": ["8", "9", "10", "11"]}
   ]
 }
