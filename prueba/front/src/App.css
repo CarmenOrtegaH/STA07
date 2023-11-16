@@ -1,0 +1,62 @@
+/* En tu archivo de estilos */
+/* App.css */
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* Alinea las cartas en la parte inferior */
+  height: 100vh; /* Usa el 100% del alto de la ventana */
+}
+
+.player-hand {
+  display: flex;
+}
+
+.card {
+  border: 1px solid #000;
+  padding: 10px;
+  margin: 10px;
+  width: 100px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+body {
+  background-image: url('tapete.jpg');
+  margin: 0; 
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-size: cover;
+}
+
+/* App.css */
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 100vh;
+  background-image: url('tapete.jpeg');
+  background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el fondo */
+}
+
+.player-hand {
+  display: flex;
+}
+
+.card {
+  border: 1px solid #000;
+  padding: 10px;
+  margin: 10px;
+  width: 100px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: antiquewhite;
+}
+
