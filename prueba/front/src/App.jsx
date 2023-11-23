@@ -17,8 +17,8 @@ const App = () => {
   return (
     <div className="app">
       <div className="player-hand">
-        {cards.map((card, index) => (
-          <Card key={index} suit={card.suit} number={card.number} />
+        {cartas.map((card, index) => (
+          <Card key={index} suit={card[0]} number={card[1]} />
         ))}
       </div>
     </div>

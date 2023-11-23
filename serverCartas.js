@@ -10,6 +10,7 @@ const clients = [];
 let gameStarted = false;
 let currentTurn = 1;
 let playerCards = {};
+let selectedCards = {};
 
 wss.on('connection', (ws) => {
     console.log('Cliente conectado');
@@ -33,6 +34,31 @@ wss.on('connection', (ws) => {
         ws.close();
     }
 
+    ws.on('message', (message) => {
+        const parsedMessage = JSON.parse(message);
+
+        if (parsedMessage.type === 'select_card') {
+            const playerId = clients.indexOf(ws);
+            const selectedCard = parsedMessage.card;
+
+            if (
+                playerCards[playerId].includes(selectedCard) &&
+                !selectedCards[playerId] &&
+                currentTurn === parsedMessage.turn
+            ) {
+                selectedCards[playerId] = selectedCard;
+
+                if (Object.keys(selectedCards).length === 4) {
+                    playTurn();
+                    selectedCards = {};
+                }
+            }
+        }
+    });
+});
+
+wss.on('error', (err) => {
+    console.log('Error: ', err);
 });
 
 function distributeCards() {
@@ -89,7 +115,7 @@ function playTurn() {
 
     clients.forEach(client => {
         const playerId = clients.indexOf(client);
-        const card = playerCards[playerId].pop();
+        const card = selectedCards[playerId];
         turnCards.push({ playerId, card });
     });
 
@@ -98,31 +124,40 @@ function playTurn() {
     clients.forEach(client => {
         const playerId = clients.indexOf(client);
         if (playerId === highestCard.playerId) {
-            // Player with the highest card wins the turn
-            client.send(JSON.stringify({ type: 'win_turn' }));
+            client.send(JSON.stringify({ type: 'win_turn', winner: playerId }));
+        } else {
+            client.send(JSON.stringify({ type: 'lose_turn', winner: highestCard.playerId }));
         }
     });
+
+    currentTurn++;
+
+    if (currentTurn > 7) {
+        endGame();
+    }
 }
 
+
 function findHighestCard(turnCards) {
-    // Implement logic to find the highest card in the current turn
-    // For simplicity, let's assume the highest card is the one with the highest value
     return turnCards.reduce((prev, current) => {
-        return current.card[1] > prev.card[1] ? current : prev;
+        const currentCardValue = current.card ? current.card[1] : 0;
+        const prevCardValue = prev.card ? prev.card[1] : 0;
+        return currentCardValue > prevCardValue ? current : prev;
     });
 }
 
 function endGame() {
-    // Implement logic to calculate and send final scores to clients
-    // For simplicity, let's assume each player gets 1 point for each turn won
     const scores = clients.map(client => {
         const playerId = clients.indexOf(client);
-        return { playerId, score: 7 - playerCards[playerId].length }; // 7 turns - remaining cards
+        const playerScore = 7 - (playerCards[playerId] ? playerCards[playerId].length : 0);
+        return { playerId, score: playerScore };
     });
+
+    const winner = scores.reduce((prev, current) => (current.score > prev.score ? current : prev));
 
     clients.forEach(client => {
         const playerId = clients.indexOf(client);
-        client.send(JSON.stringify({ type: 'game_over', scores }));
+        client.send(JSON.stringify({ type: 'game_over', scores, winner }));
     });
 }
 
