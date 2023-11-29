@@ -7,78 +7,117 @@ function Game() {
   const [cartas, setcartas] = useState('');
   const [isTurnWinner, setIsTurnWinner] = useState(false);
   const [scores, setScores] = useState([]);
-  const [currentTurn, setCurrentTurn] = useState(1); // Agregamos currentTurn aquí
+  const [currentTurn, setCurrentTurn] = useState(1);
   const [clickedCard, setClickedCard] = useState(null);
 
   const websocketRef = useRef(null);
   const clientsRef = useRef([]);
 
+  function handleMessage(message) {
+    if (message.type === 'joined_game') {
+      setGameResponse('Te has unido con éxito a la partida.');
+    } else if (message.type === 'game_full') {
+      setGameResponse('La partida está llena, no puedes unirte.');
+      ws.close();
+    }
+
+    if (message.type === 'cartas') {
+      setGameResponse(null);
+      setcartas(message.cartas);
+    }
+
+    if (message.type === 'win_turn' || message.type === 'lose_turn') {
+      cartaClick = null;
+      setClickedCard(null);
+      setScores(message.scores);
+    } 
+    
+    if (message.type === 'game_over') {
+        setScores(message.scores);
+        if (message.winner === clientsRef.current.indexOf(websocketRef.current)) {
+            setGameResponse('¡Has ganado la partida!');
+        } else {
+            setGameResponse('¡Has perdido la partida!');
+        }
+    }
+  }
+
   useEffect(() => {
     console.log('abrir websocket');
-    websocketRef.current = new WebSocket('ws://localhost:3001');
+    const ws = new WebSocket('ws://localhost:3001');
+    websocketRef.current = ws;
 
-    websocketRef.current.addEventListener('message', (event) => {
+    ws.addEventListener('open', () => {
+      console.log('websocket abierto');
+    });
+
+    ws.addEventListener('message', (event) => {
       const message = JSON.parse(event.data);
+      handleMessage(message);
+    });
 
-      if (message.type === 'joined_game') {
-        setGameResponse('Te has unido con éxito a la partida.');
-      } else if (message.type === 'game_full') {
-        setGameResponse('La partida está llena, no puedes unirte.');
-      }
-
-      if (message.type === 'cartas') {
-        setcartas(message.cartas);
-      }
-
-      if (message.type === 'win_turn') {
-        setIsTurnWinner(message.winner === clientsRef.current.indexOf(websocketRef.current));
-        setCurrentTurn(currentTurn + 1);
-      } else if (message.type === 'lose_turn') {
-          setIsTurnWinner(false);
-          setCurrentTurn(currentTurn + 1);
-      } else if (message.type === 'game_over') {
-          setScores(message.scores);
-          if (message.winner === clientsRef.current.indexOf(websocketRef.current)) {
-              setGameResponse('¡Has ganado la partida!');
-          } else {
-              setGameResponse('¡Has perdido la partida!');
-          }
-      }
+    ws.addEventListener('close', () => {
+      console.log('websocket cerrado');
     });
 
     return () => {
-      websocketRef.current.close();
+      ws.close();
     };
-  }, [currentTurn]);
+  }, []);
+
+  let cartaClick = null;
 
   const handleCardClick = (card) => {
-    if (!isTurnWinner) {
+    if (!clickedCard) {
         setClickedCard(card);
-        const selectedCardMessage = JSON.stringify({ type: 'select_card', card, turn: currentTurn });
-        websocketRef.current.send(selectedCardMessage);
-        setIsTurnWinner(false); 
+        cartaClick = card;
+        console.log("turno antes de mandar el mensaje", currentTurn);
+        setcartas(oldCartas => {
+          const updatedCartas = oldCartas.filter((carta) => carta[0] !== cartaClick[0] || carta[1] !== cartaClick[1]);
+          const selectedCardMessage = JSON.stringify({ type: 'select_card', card, turn: currentTurn });
+          websocketRef.current.send(selectedCardMessage);
+          setCurrentTurn(currentTurn + 1);
+          return updatedCartas;
+      });
+
     }
-};
+  };
+
+  const playerId = clientsRef.current.indexOf(websocketRef.current) + 1;
 
   return (
     <div>
-      <p>{gameResponse}</p>
+      <p className="mensajeInicial"> {gameResponse} </p>
+
+      <div className="barraPuntuaciones">
+        {scores && Object.keys(scores).map(player => (
+          <p key={player}>{`Jugador ${player}: ${scores[player]} puntos`} </p>
+        ))}
+
+        {`Turno: ${currentTurn}`}
+      </div>
+
+      <p className="numeroJugador"> {playerId} </p>
       {cartas && (
         <div>
           <div className="player-hand">
             {cartas.map((card, index) => (
-              <Card key={index} suit={card[0]} number={card[1]} onClick={() => handleCardClick(card)} />
+              <Card
+                key={index} suit={card[0]} number={card[1]} onClick={() => handleCardClick(card)} />
             ))}
           </div>
-          {isTurnWinner && <p>Ganaste el turno.</p>}
+          {isTurnWinner && 
+            <p>Ganaste el turno.</p>
+          }
         </div>
       )}
+
       {scores.length > 0 && (
         <div>
           <p>Puntuaciones finales:</p>
           <ul>
             {scores.map((score) => (
-              <li key={score.playerId}>{`Jugador ${score.playerId + 1}: ${score.score} puntos`}</li>
+              <li key={score.playerId}>{`Jugador ${score.playerId}: ${score.score} puntos`}</li>
             ))}
           </ul>
         </div>
