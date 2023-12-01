@@ -55,3 +55,13 @@ body {
   cursor: 'pointer';
   background-color: lightgrey;
 }
+
+.numeroJugador {
+  position: absolute;
+  top: 60%;
+  left: 45%;
+  font-size: 20px;
+  padding: 1%;
+  color: white;
+  font-weight: bold;
+}

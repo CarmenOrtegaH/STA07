@@ -5,13 +5,12 @@ import Card from './clases/Card';
 function Game() {
   const [gameResponse, setGameResponse] = useState('');
   const [cartas, setcartas] = useState('');
-  const [isTurnWinner, setIsTurnWinner] = useState(false);
   const [scores, setScores] = useState([]);
   const [currentTurn, setCurrentTurn] = useState(1);
   const [clickedCard, setClickedCard] = useState(null);
+  const [id, setId] = useState(0);
 
   const websocketRef = useRef(null);
-  const clientsRef = useRef([]);
 
   function handleMessage(message) {
     if (message.type === 'joined_game') {
@@ -24,6 +23,8 @@ function Game() {
     if (message.type === 'cartas') {
       setGameResponse(null);
       setcartas(message.cartas);
+      setId(message.id);
+      setScores({1: 0, 2: 0, 3: 0, 4: 0});
     }
 
     if (message.type === 'win_turn' || message.type === 'lose_turn') {
@@ -33,12 +34,12 @@ function Game() {
     } 
     
     if (message.type === 'game_over') {
-        setScores(message.scores);
-        if (message.winner === clientsRef.current.indexOf(websocketRef.current)) {
-            setGameResponse('¡Has ganado la partida!');
-        } else {
-            setGameResponse('¡Has perdido la partida!');
-        }
+      setScores(message.puntuaciones);
+      if (message.winner == (message.id)) {
+        setGameResponse('¡Has ganado la partida!');
+      } else {
+        setGameResponse('¡Has perdido la partida!');
+      }
     }
   }
 
@@ -76,14 +77,18 @@ function Game() {
           const updatedCartas = oldCartas.filter((carta) => carta[0] !== cartaClick[0] || carta[1] !== cartaClick[1]);
           const selectedCardMessage = JSON.stringify({ type: 'select_card', card, turn: currentTurn });
           websocketRef.current.send(selectedCardMessage);
-          setCurrentTurn(currentTurn + 1);
-          return updatedCartas;
+
+          if (updatedCartas.length === 0) {
+            return updatedCartas;
+          }
+          else {
+            setCurrentTurn(currentTurn + 1);
+            return updatedCartas;
+          }
       });
 
     }
   };
-
-  const playerId = clientsRef.current.indexOf(websocketRef.current) + 1;
 
   return (
     <div>
@@ -97,7 +102,7 @@ function Game() {
         {`Turno: ${currentTurn}`}
       </div>
 
-      <p className="numeroJugador"> {playerId} </p>
+      <p className="numeroJugador"> {`Jugador: ${id}`} </p>
       {cartas && (
         <div>
           <div className="player-hand">
@@ -106,20 +111,6 @@ function Game() {
                 key={index} suit={card[0]} number={card[1]} onClick={() => handleCardClick(card)} />
             ))}
           </div>
-          {isTurnWinner && 
-            <p>Ganaste el turno.</p>
-          }
-        </div>
-      )}
-
-      {scores.length > 0 && (
-        <div>
-          <p>Puntuaciones finales:</p>
-          <ul>
-            {scores.map((score) => (
-              <li key={score.playerId}>{`Jugador ${score.playerId}: ${score.score} puntos`}</li>
-            ))}
-          </ul>
         </div>
       )}
     </div>

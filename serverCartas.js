@@ -1,6 +1,5 @@
 const express = require('express');
 const http = require('http');
-const { parse } = require('path');
 const WebSocket = require('ws');
 
 const app = express();
@@ -14,7 +13,6 @@ let selectedCards = {};
 let puntuaciones = {};
 
 wss.on('connection', (ws) => {
-    console.log('Cliente conectado');
     if (clients.length < 4) {
         clients.push(ws);
 
@@ -22,12 +20,10 @@ wss.on('connection', (ws) => {
 
         ws.on('close', () => {
             clients.splice(clients.indexOf(ws), 1);
-            console.log('Cliente desconectado');
         });
 
         if (clients.length === 4) {
-            console.log('Juego lleno');
-            puntuaciones = {1: 0, 2: 0, 3: 0, 4: 0};
+            puntuaciones = { 1: 0, 2: 0, 3: 0, 4: 0 };
             distributeCards();
         }
     }
@@ -105,12 +101,13 @@ function playTurn() {
     });
 
     const highestCard = findHighestCard(turnCards);
+    puntuaciones[highestCard.playerId + 1] += 1;
 
     clients.forEach(client => {
         const playerId = clients.indexOf(client);
+
         if (playerId === highestCard.playerId) {
             client.send(JSON.stringify({ type: 'win_turn', winner: playerId + 1, scores: puntuaciones }));
-            puntuaciones[playerId + 1] += 1;
         } else {
             client.send(JSON.stringify({ type: 'lose_turn', winner: highestCard.playerId + 1, scores: puntuaciones }));
         }
@@ -136,10 +133,11 @@ function endGame() {
         return { playerId, score: playerScore };
     });
 
-    const winner = scores.reduce((prev, current) => (current.score > prev.score ? current : prev));
+    const ganador = scores.reduce((prev, current) => (current.score > prev.score ? current : prev));
+    const winner = ganador.playerId + 1;
 
     clients.forEach(client => {
-        client.send(JSON.stringify({ type: 'game_over', scores, winner }));
+        client.send(JSON.stringify({ type: 'game_over', puntuaciones, winner, id: clients.indexOf(client) + 1}));
     });
 }
 
