@@ -34,7 +34,7 @@ function joinPlayer(ws) {
 
   ws.send(JSON.stringify({ type: 'joined_game', id: clients.length }));
 
-  ws.on('message', onMessage);  // COMENTARIO: Esta línea mejor aquí. Si rechazamos al jugador no tiene sentido.
+  ws.on('message', message => onMessage(message, ws));  // COMENTARIO: Esta línea mejor aquí. Si rechazamos al jugador no tiene sentido.
 
   ws.on('close', () => {
     clients.splice(clients.indexOf(ws), 1);
@@ -54,7 +54,7 @@ function rejectPlayer(ws) {
 }
 
 
-function onMessage(message) {
+function onMessage(message, ws) {
   const parsedMessage = JSON.parse(message);
 
   if (parsedMessage.type === 'select_card') {
