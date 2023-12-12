@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
+const { createDeck, shuffleDeck, findHighestCard } = require('./cards');
 
 const app = express();
 const server = http.createServer(app);
@@ -12,66 +13,70 @@ let playerCards = {};
 let selectedCards = {};
 let puntuaciones = {};
 
+// COMENTARIO: Siempre es mejor evitar "números mágicos", y definir constantes.
+// Así podríamos cambiar el número de jugadores.
+const MAX_PLAYERS = 4;
+
+
 wss.on('connection', (ws) => {
-    if (clients.length < 4) {
-        clients.push(ws);
-
-        ws.send(JSON.stringify({ type: 'joined_game', id: clients.length}));
-
-        ws.on('close', () => {
-            clients.splice(clients.indexOf(ws), 1);
-        });
-
-        if (clients.length === 4) {
-            puntuaciones = { 1: 0, 2: 0, 3: 0, 4: 0 };
-            distributeCards();
-        }
-    }
-    else {
-        ws.send(JSON.stringify({ type: 'game_full' }));
-        ws.close();
-    }
-      
-    ws.on('message', (message) => {
-        const parsedMessage = JSON.parse(message);
-
-        if (parsedMessage.type === 'select_card') {
-            const playerId = clients.indexOf(ws) + 1;
-            const selectedCard = parsedMessage.card;
-
-            if (!selectedCards[playerId - 1] && currentTurn == parsedMessage.turn) {
-                selectedCards[playerId - 1] = selectedCard;
-                playerCards[playerId -1].pop(selectedCard);
-
-                if (Object.keys(selectedCards).length === 4) {
-                    playTurn();
-                    currentTurn++;
-                    selectedCards = {};
-                }
-            }
-        }
-    });
+  // COMENTARIO: Separando estas funciones es mucho ḿas fácil entender la función de conexión.
+  if (clients.length < MAX_PLAYERS) {
+    joinPlayer(ws);
+  }
+  else {
+    rejectPlayer(ws);
+  }
 });
 
-function createDeck() {
-    let deck = [];
-    const palos = ['diamond', 'heart', 'club', 'spade'];
-    const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A']
 
-    for (let palo of palos) {
-        for (let value of values) {
-            deck.push([palo, value]);
-        }
+function joinPlayer(ws) {
+  clients.push(ws);
+
+  ws.send(JSON.stringify({ type: 'joined_game', id: clients.length }));
+
+  ws.on('message', onMessage);  // COMENTARIO: Esta línea mejor aquí. Si rechazamos al jugador no tiene sentido.
+
+  ws.on('close', () => {
+    clients.splice(clients.indexOf(ws), 1);
+  });
+
+  if (clients.length === MAX_PLAYERS) {
+    for (let i = 1; i <= MAX_PLAYERS; i++) {
+      puntuaciones[i] = 0;
     }
-    return deck;
+    distributeCards();
+  }
 }
 
-function shuffleDeck(deck) {
-    for (let i = deck.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
+function rejectPlayer(ws) {
+  ws.send(JSON.stringify({ type: 'game_full' }));
+  ws.close();
 }
+
+
+function onMessage(message) {
+  const parsedMessage = JSON.parse(message);
+
+  if (parsedMessage.type === 'select_card') {
+    // COMENTARIO: Os ha complicado un pelín la vida no empezar por el 0.
+    // No pasa nada, pero es más fácil mantener siempre el 0, hasta el momento en el que lo muestras al jugador,
+    // que ahí añades 1 para que sea más "user friendly". Pero vaya, no está mal.
+    const playerId = clients.indexOf(ws) + 1;
+    const selectedCard = parsedMessage.card;
+
+    if (!selectedCards[playerId - 1] && currentTurn == parsedMessage.turn) {  // COMENTARIO: Bien comprobado!
+      selectedCards[playerId - 1] = selectedCard;
+      playerCards[playerId - 1].pop(selectedCard);
+
+      if (Object.keys(selectedCards).length === MAX_PLAYERS) {
+        playTurn();
+        currentTurn++;
+        selectedCards = {};
+      }
+    }
+  }
+}
+
 
 function distributeCards() {
     let deck = createDeck();
@@ -90,6 +95,7 @@ function distributeCards() {
         client.send(JSON.stringify({ type: 'cartas', cartas, id: playerId}));
     });
 }
+
 
 function playTurn() {
     let turnCards = [];
@@ -118,13 +124,6 @@ function playTurn() {
     }
 }
 
-function findHighestCard(turnCards) {
-    return turnCards.reduce((prev, current) => {
-        const currentCardValue = current.card ? current.card[1] : 0;
-        const prevCardValue = prev.card ? prev.card[1] : 0;
-        return currentCardValue > prevCardValue ? current : prev;
-    });
-}
 
 function endGame() {
     const scores = clients.map(client => {
